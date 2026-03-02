@@ -1,0 +1,13 @@
+md5: c2ceab8e8fdf3f491c9eb084a52a0af8
+frozen: true
+deps:
+- checksum: '"617b56af2992376d5c3e91ad80823898"'
+  size: 333757
+  hash: md5
+  path: 
+    https://datascientest-mlops.s3.eu-west-1.amazonaws.com/mlops_dvc_fr/raw.csv
+outs:
+- md5: 617b56af2992376d5c3e91ad80823898
+  size: 333757
+  hash: md5
+  path: raw.csv
