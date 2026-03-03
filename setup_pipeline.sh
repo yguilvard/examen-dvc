@@ -21,12 +21,14 @@ test -f "${DVC}" || (echo "dvc is not yet installed and configured. Use \"uv syn
 echo ".. Defining Stage 1: Split"
 ${DVC} stage add --force -n "split" \
   -d "src/data/data_split.py" \
+  -d "params.yaml" \
   -d "data/raw_data/raw.csv" \
   -o "data/processed/X_train.csv" \
   -o "data/processed/X_test.csv" \
   -o "data/processed/y_train.csv" \
   -o "data/processed/y_test.csv" \
-  python src/data/data_split.py
+  python src/data/data_split.py \
+    --config "params.yaml"
 
 # Stage 2: Normalization
 echo ".. Defining Stage 2: Normalize"

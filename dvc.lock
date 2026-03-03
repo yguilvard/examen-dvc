@@ -69,8 +69,8 @@ stages:
       size: 26009
     - path: params.yaml
       hash: md5
-      md5: 356f389471d1755c7de771a02eb93538
-      size: 293
+      md5: f629ff4b3d33a578807de9be8a2232a4
+      size: 329
     - path: src/models/grid_search.py
       hash: md5
       md5: 7873b2d5384ffef8ef1c44924fe42bca
@@ -82,8 +82,8 @@ stages:
     outs:
     - path: metrics/lightgbm_results.csv
       hash: md5
-      md5: 846ba4e097bb6888d8c1cf24ee392acc
-      size: 17107
+      md5: 2829a7c15811749c702949a053464e42
+      size: 17108
     - path: models/best_params.pkl
       hash: md5
       md5: 463f985bcdc676c28ab30b0e07d6a0d4
@@ -107,8 +107,8 @@ stages:
       size: 110
     - path: params.yaml
       hash: md5
-      md5: 356f389471d1755c7de771a02eb93538
-      size: 293
+      md5: f629ff4b3d33a578807de9be8a2232a4
+      size: 329
     - path: src/models/registry.py
       hash: md5
       md5: 60f6ea7d044acfa801d7f2852c9a986c
@@ -153,16 +153,20 @@ stages:
       md5: ac6bcaa49b1e77baa4d0db44c63326ff
       size: 144
   split:
-    cmd: python src/data/data_split.py
+    cmd: python src/data/data_split.py --config params.yaml
     deps:
     - path: data/raw_data/raw.csv
       hash: md5
       md5: 617b56af2992376d5c3e91ad80823898
       size: 333757
+    - path: params.yaml
+      hash: md5
+      md5: f629ff4b3d33a578807de9be8a2232a4
+      size: 329
     - path: src/data/data_split.py
       hash: md5
-      md5: b25b39fd8c3079c49f74645674242654
-      size: 2199
+      md5: 30651a6bc8cdc7e1c3e5455175e0f5c0
+      size: 2782
     outs:
     - path: data/processed/X_test.csv
       hash: md5

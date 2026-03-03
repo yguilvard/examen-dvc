@@ -4,6 +4,7 @@ from pathlib import Path
 import pandas as pd
 import argparse
 from sklearn.model_selection import train_test_split
+import yaml
 
 # Local imports
 from src.constants import DATA_RAW_DIR, DATA_PROCESSED_DIR
@@ -11,6 +12,12 @@ from src.constants import DATA_RAW_DIR, DATA_PROCESSED_DIR
 
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
+
+
+def load_split_params(config_path: Path) -> dict:
+    with config_path.open("r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f) or {}
+    return cfg.get("split", {}) or {}
 
 
 def main(input_file: Path, output_dir: Path, test_size: float, seed: int):
@@ -75,13 +82,24 @@ if __name__ == "__main__":
         default=RANDOM_STATE,
         help="Random seed for train/test split.",
     )
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=None,
+        help="Optional params.yaml path. If provided, uses split.test_size/split.seed.",
+    )
     # Parsing arguments
     args = parser.parse_args()
+    split_cfg = {}
+    if args.config is not None:
+        split_cfg = load_split_params(args.config)
+    test_size = float(split_cfg.get("test_size", args.test_size))
+    seed = int(split_cfg.get("seed", args.seed))
 
     # Run the main process
     main(
         input_file=args.input_path,
         output_dir=args.output_dir,
-        test_size=args.test_size,
-        seed=args.seed,
+        test_size=test_size,
+        seed=seed,
     )
