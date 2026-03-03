@@ -66,7 +66,7 @@ def main(config: Path,
     results.to_csv(METRICS_DIR / f"{model_name}_results.csv", index=False)
 
     print("model:", model_name)
-    print("scoring:", args.scoring)
+    print("scoring:", scoring)
     print("best_params:", best_params)
     print("best_cv_score:", best_score)
 
