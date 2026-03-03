@@ -1,0 +1,156 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/data/prepare.py
+    deps:
+    - path: data/raw_data/raw.csv
+      hash: md5
+      md5: 617b56af2992376d5c3e91ad80823898
+      size: 333757
+    - path: src/data/prepare.py
+      hash: md5
+      md5: 687f6206e41776e8b4b3ef4a5eaf6546
+      size: 2191
+    outs:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: 0e96e0ba3291417bed53b54b1f652a9d
+      size: 52866
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 9c692a66c13c842645c9050e64165de0
+      size: 210339
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: f4af67a3212ab00e1efdd89341223f56
+      size: 6473
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: adf073bca29464cdfad732520f736bde
+      size: 26009
+  normalize:
+    cmd: python src/data/normalize.py
+    deps:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: 0e96e0ba3291417bed53b54b1f652a9d
+      size: 52866
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 9c692a66c13c842645c9050e64165de0
+      size: 210339
+    - path: src/data/normalize.py
+      hash: md5
+      md5: a1e90f7a53baad7115584f73d9908562
+      size: 2124
+    outs:
+    - path: data/processed/X_test_scaled.csv
+      hash: md5
+      md5: e6ecc20747bef12fd87485ad86ffe375
+      size: 57051
+    - path: data/processed/X_train_scaled.csv
+      hash: md5
+      md5: 5a53ba4e8232e6b1cd840e260550b65f
+      size: 227423
+    - path: models/scaler.joblib
+      hash: md5
+      md5: ce1ffc019f60afe0f6a5d4636214f37a
+      size: 1143
+  gridsearch:
+    cmd: python src/models/gridsearch.py --config 
+      configs/gridsearch_lightgbm.json
+    deps:
+    - path: configs/gridsearch_lightgbm.json
+      hash: md5
+      md5: 793c2f52b5c2b115cc1d4c8648a54448
+      size: 382
+    - path: data/processed/X_train_scaled.csv
+      hash: md5
+      md5: 5a53ba4e8232e6b1cd840e260550b65f
+      size: 227423
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: adf073bca29464cdfad732520f736bde
+      size: 26009
+    - path: src/models/gridsearch.py
+      hash: md5
+      md5: 5e803917cdc598fc34d500f70c227212
+      size: 3204
+    - path: src/models/registry.py
+      hash: md5
+      md5: 60f6ea7d044acfa801d7f2852c9a986c
+      size: 858
+    outs:
+    - path: metrics/lightgbm_results.csv
+      hash: md5
+      md5: 7614cbe34eb922c217d0a82133bf6e12
+      size: 17105
+    - path: models/lightgbm-best-params.pkl
+      hash: md5
+      md5: 463f985bcdc676c28ab30b0e07d6a0d4
+      size: 110
+  training:
+    cmd: python src/models/train.py --config configs/gridsearch_lightgbm.json 
+      --params models/lightgbm-best-params.pkl --X_train_path 
+      data/processed/X_train_scaled.csv --y_train_path 
+      data/processed/y_train.csv
+    deps:
+    - path: configs/gridsearch_lightgbm.json
+      hash: md5
+      md5: 793c2f52b5c2b115cc1d4c8648a54448
+      size: 382
+    - path: data/processed/X_train_scaled.csv
+      hash: md5
+      md5: 5a53ba4e8232e6b1cd840e260550b65f
+      size: 227423
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: adf073bca29464cdfad732520f736bde
+      size: 26009
+    - path: models/lightgbm-best-params.pkl
+      hash: md5
+      md5: 463f985bcdc676c28ab30b0e07d6a0d4
+      size: 110
+    - path: src/models/registry.py
+      hash: md5
+      md5: 60f6ea7d044acfa801d7f2852c9a986c
+      size: 858
+    - path: src/models/train.py
+      hash: md5
+      md5: 7b175e2b945df9ea5986a2d85a2192f4
+      size: 2099
+    outs:
+    - path: models/lightgbm.pkl
+      hash: md5
+      md5: c1476e59c730bccbc40db070502c6d38
+      size: 903189
+  evaluate:
+    cmd: python src/models/evaluate.py --model_path models/lightgbm.pkl 
+      --X_test_path data/processed/X_test_scaled.csv --y_test_path 
+      data/processed/y_test.csv
+    deps:
+    - path: data/processed/X_test_scaled.csv
+      hash: md5
+      md5: e6ecc20747bef12fd87485ad86ffe375
+      size: 57051
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: f4af67a3212ab00e1efdd89341223f56
+      size: 6473
+    - path: models/lightgbm.pkl
+      hash: md5
+      md5: c1476e59c730bccbc40db070502c6d38
+      size: 903189
+    - path: src/models/evaluate.py
+      hash: md5
+      md5: cef9c4b7a16fbe28fa1c448c597b9cfb
+      size: 2675
+    outs:
+    - path: data/predictions.csv
+      hash: md5
+      md5: 07f16975fb8764cd437b9d12352f627f
+      size: 69561
+    - path: metrics/scores.json
+      hash: md5
+      md5: ac6bcaa49b1e77baa4d0db44c63326ff
+      size: 144

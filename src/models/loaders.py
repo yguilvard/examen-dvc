@@ -1,13 +1,13 @@
-import json
 from pathlib import Path
 from typing import Any, Dict
 
 import pandas as pd
+import yaml
 
 
-def load_json(path: Path) -> Dict[str, Any]:
+def load_config(path: Path) -> Dict[str, Any]:
     with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
+        return yaml.safe_load(f)
 
 
 def load_xy(X_path: Path, y_path: Path):

@@ -18,8 +18,8 @@ DVC="${VENV_BIN}/dvc"
 test -f "${DVC}" || (echo "dvc is not yet installed and configured. Use \"uv sync\"" && exit 1)
 
 # Stage 1: Preparation
-echo ".. Defining Stage 1: Prepare"
-${DVC} stage add --force -n "prepare" \
+echo ".. Defining Stage 1: Split"
+${DVC} stage add --force -n "split" \
   -d "src/data/prepare.py" \
   -d "data/raw_data/raw.csv" \
   -o "data/processed/X_train.csv" \
@@ -44,25 +44,25 @@ echo ".. Defining Stage 3: GridSearch"
 ${DVC} stage add --force -n "gridsearch" \
   -d "src/models/gridsearch.py" \
   -d "src/models/registry.py" \
-  -d "configs/gridsearch_${MODEL_NAME}.json" \
+  -d "params.yaml" \
   -d "data/processed/X_train_scaled.csv" \
   -d "data/processed/y_train.csv" \
   -o "models/${MODEL_NAME}-best-params.pkl" \
   -o "metrics/${MODEL_NAME}_results.csv" \
   python src/models/gridsearch.py \
-    --config "configs/gridsearch_${MODEL_NAME}.json" 
+    --config "params.yaml" 
 
 echo ".. Defining Stage 4: Training"
 ${DVC} stage add --force -n "training" \
   -d "src/models/train.py" \
   -d "src/models/registry.py" \
-  -d "configs/gridsearch_${MODEL_NAME}.json" \
+  -d "params.yaml" \
   -d "models/${MODEL_NAME}-best-params.pkl" \
   -d "data/processed/X_train_scaled.csv" \
   -d "data/processed/y_train.csv" \
   -o "models/${MODEL_NAME}.pkl" \
   python src/models/train.py \
-    --config "configs/gridsearch_${MODEL_NAME}.json" \
+    --config "params.yaml" \
     --params "models/${MODEL_NAME}-best-params.pkl" \
     --X_train_path "data/processed/X_train_scaled.csv" \
     --y_train_path "data/processed/y_train.csv" 

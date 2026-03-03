@@ -10,7 +10,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer, root_mean_squared_error, mean_absolute_error, r2_score
 
 from src.constants import DATA_PROCESSED_DIR, METRICS_DIR, MODELS_DIR
-from src.models.loaders import load_json, load_xy
+from src.models.loaders import load_config, load_xy
 from src.models.registry import build_model
 
 
@@ -29,7 +29,7 @@ def main(config: Path,
          cv: int = 5,
          ):
 
-    cfg = load_json(config)
+    cfg = load_config(config)
 
     model_name = str(cfg.get("model_name", "")).strip()
     if not model_name:
@@ -73,9 +73,9 @@ def main(config: Path,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="GridSearchCV regression (JSON config).")
+        description="GridSearchCV regression (JSON/YAML config).")
     parser.add_argument("--config", required=True, type=Path,
-                        help="Path to JSON config file.")
+                        help="Path to JSON or YAML config file.")
     parser.add_argument(
         "--X_train_path",
         type=Path,

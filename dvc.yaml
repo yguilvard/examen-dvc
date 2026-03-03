@@ -1,5 +1,5 @@
 stages:
-  prepare:
+  split:
     cmd: python src/data/prepare.py
     deps:
     - data/raw_data/raw.csv
@@ -20,10 +20,9 @@ stages:
     - data/processed/X_train_scaled.csv
     - models/scaler.joblib
   gridsearch:
-    cmd: python src/models/gridsearch.py --config 
-      configs/gridsearch_lightgbm.json
+    cmd: python src/models/gridsearch.py --config params.yaml
     deps:
-    - configs/gridsearch_lightgbm.json
+    - params.yaml
     - data/processed/X_train_scaled.csv
     - data/processed/y_train.csv
     - src/models/gridsearch.py
@@ -46,12 +45,12 @@ stages:
     - metrics/scores.json:
         cache: false
   training:
-    cmd: python src/models/train.py --config configs/gridsearch_lightgbm.json 
+    cmd: python src/models/train.py --config params.yaml 
       --params models/lightgbm-best-params.pkl --X_train_path 
       data/processed/X_train_scaled.csv --y_train_path 
       data/processed/y_train.csv
     deps:
-    - configs/gridsearch_lightgbm.json
+    - params.yaml
     - data/processed/X_train_scaled.csv
     - data/processed/y_train.csv
     - models/lightgbm-best-params.pkl

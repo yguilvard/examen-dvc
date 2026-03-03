@@ -4,14 +4,14 @@ from pathlib import Path
 import joblib
 
 from src.constants import DATA_PROCESSED_DIR, MODELS_DIR
-from src.models.loaders import load_json, load_xy
+from src.models.loaders import load_config, load_xy
 from src.models.registry import build_model
 
 
 def main(config: Path, paramfile: Path, X_train_path: Path, y_train_path: Path):
 
     # Load config (for model_name + base kwargs)
-    cfg = load_json(config)
+    cfg = load_config(config)
 
     # Retrieve the model name from the configuration
     model_name = str(cfg.get("model_name", "")).strip()
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     parser.add_argument("--params", default=MODELS_DIR / "/best_params.pkl")
 
     parser.add_argument("--config", required=True, type=Path,
-                        help="Path to JSON config used in GridSearch.")
+                        help="Path to JSON or YAML config used in GridSearch.")
     parser.add_argument(
         "--X_train_path",
         type=Path,
