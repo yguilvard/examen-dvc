@@ -698,12 +698,17 @@ wheels = [
 [[package]]
 name = "examen-dvc"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "dvc" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "scikit-learn" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "examen-dvc" },
 ]
 
 [package.metadata]
@@ -713,6 +718,9 @@ requires-dist = [
     { name = "pandas", specifier = ">=3.0.1" },
     { name = "scikit-learn", specifier = ">=1.8.0" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "examen-dvc", editable = "." }]
 
 [[package]]
 name = "filelock"

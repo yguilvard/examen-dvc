@@ -10,3 +10,23 @@ dependencies = [
     "pandas>=3.0.1",
     "scikit-learn>=1.8.0",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.uv.workspace]
+members = [
+    ".",
+]
+
+[tool.uv.sources]
+examen-dvc = { workspace = true, editable = true }
+
+[dependency-groups]
+dev = [
+    "examen-dvc",
+]
