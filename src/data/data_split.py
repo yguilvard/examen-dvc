@@ -1,4 +1,4 @@
-# src/prepare.py
+# src/data/data_split.py
 
 from pathlib import Path
 import pandas as pd

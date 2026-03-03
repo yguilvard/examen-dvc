@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import os
 from pathlib import Path
 
 import joblib
@@ -24,7 +23,7 @@ SCORERS = {
 def main(config: Path,
          X_train_path: Path,
          y_train_path: Path,
-         output_dir: Path,
+         params_output: Path,
          scoring: str = "rmse",
          cv: int = 5,
          ):
@@ -58,9 +57,9 @@ def main(config: Path,
     best_params = grid.best_params_
     best_score = grid.best_score_
 
-    # Create the output directory
-    os.makedirs(output_dir, exist_ok=True)
-    joblib.dump(best_params, output_dir / f"{model_name}-best-params.pkl")
+    # Save best params to the expected artifact path
+    params_output.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(best_params, params_output)
 
     results = pd.DataFrame(grid.cv_results_)
     results.to_csv(METRICS_DIR / f"{model_name}_results.csv", index=False)
@@ -92,14 +91,14 @@ if __name__ == "__main__":
                         choices=sorted(SCORERS.keys()))
     parser.add_argument("--cv", type=int, default=5)
     parser.add_argument(
-        "--output_dir",
+        "--params_output",
         type=Path,
-        default=MODELS_DIR,
-        help="Directory to save the resulting parameters.",
+        default=MODELS_DIR / "best_params.pkl",
+        help="Output path for the best params pickle.",
     )
     args = parser.parse_args()
     main(config=args.config,
-         output_dir=args.output_dir,
+         params_output=args.params_output,
          X_train_path=args.X_train_path,
          y_train_path=args.y_train_path,
          cv=args.cv,

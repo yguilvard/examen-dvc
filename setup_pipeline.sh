@@ -20,13 +20,13 @@ test -f "${DVC}" || (echo "dvc is not yet installed and configured. Use \"uv syn
 # Stage 1: Preparation
 echo ".. Defining Stage 1: Split"
 ${DVC} stage add --force -n "split" \
-  -d "src/data/prepare.py" \
+  -d "src/data/data_split.py" \
   -d "data/raw_data/raw.csv" \
   -o "data/processed/X_train.csv" \
   -o "data/processed/X_test.csv" \
   -o "data/processed/y_train.csv" \
   -o "data/processed/y_test.csv" \
-  python src/data/prepare.py
+  python src/data/data_split.py
 
 # Stage 2: Normalization
 echo ".. Defining Stage 2: Normalize"
@@ -42,28 +42,28 @@ ${DVC} stage add --force -n "normalize" \
 # Stage 3: GridSearch
 echo ".. Defining Stage 3: GridSearch"
 ${DVC} stage add --force -n "gridsearch" \
-  -d "src/models/gridsearch.py" \
+  -d "src/models/grid_search.py" \
   -d "src/models/registry.py" \
   -d "params.yaml" \
   -d "data/processed/X_train_scaled.csv" \
   -d "data/processed/y_train.csv" \
-  -o "models/${MODEL_NAME}-best-params.pkl" \
+  -o "models/best_params.pkl" \
   -o "metrics/${MODEL_NAME}_results.csv" \
-  python src/models/gridsearch.py \
+  python src/models/grid_search.py \
     --config "params.yaml" 
 
 echo ".. Defining Stage 4: Training"
 ${DVC} stage add --force -n "training" \
-  -d "src/models/train.py" \
+  -d "src/models/training.py" \
   -d "src/models/registry.py" \
   -d "params.yaml" \
-  -d "models/${MODEL_NAME}-best-params.pkl" \
+  -d "models/best_params.pkl" \
   -d "data/processed/X_train_scaled.csv" \
   -d "data/processed/y_train.csv" \
   -o "models/${MODEL_NAME}.pkl" \
-  python src/models/train.py \
+  python src/models/training.py \
     --config "params.yaml" \
-    --params "models/${MODEL_NAME}-best-params.pkl" \
+    --params "models/best_params.pkl" \
     --X_train_path "data/processed/X_train_scaled.csv" \
     --y_train_path "data/processed/y_train.csv" 
 
@@ -73,9 +73,10 @@ ${DVC} stage add --force -n "evaluate" \
   -d "models/${MODEL_NAME}.pkl" \
   -d "data/processed/X_test_scaled.csv" \
   -d "data/processed/y_test.csv" \
-  -o "data/predictions.csv" \
+  -o "data/prediction.csv" \
   -M metrics/scores.json \
   python src/models/evaluate.py \
     --model_path "models/${MODEL_NAME}.pkl" \
     --X_test_path "data/processed/X_test_scaled.csv" \
-    --y_test_path "data/processed/y_test.csv"
+    --y_test_path "data/processed/y_test.csv" \
+    --output "data/prediction.csv"
