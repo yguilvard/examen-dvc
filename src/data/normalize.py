@@ -44,33 +44,33 @@ def main(X_train_path: Path,
 
 
 if __name__ == "__main__":
-    args = argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description="Normalize features using StandardScaler.")
-    args.add_argument(
+    parser.add_argument(
         "--X_train_path",
         type=Path,
         default=DATA_PROCESSED_DIR / "X_train.csv",
         help="Path to the training features.",
     )
-    args.add_argument(
+    parser.add_argument(
         "--X_test_path",
         type=Path,
         default=DATA_PROCESSED_DIR / "X_test.csv",
         help="Path to the testing features.",
     )
-    args.add_argument(
+    parser.add_argument(
         "--output_dir",
         type=Path,
         default=DATA_PROCESSED_DIR,
         help="Directory to save the normalized datasets.",
     )
-    args.add_argument(
+    parser.add_argument(
         "--model_dir",
         type=Path,
         default=MODELS_DIR,
         help="Directory to save the scaler model.",
     )
-    args = args.parse_args()
+    args = parser.parse_args()
     main(X_train_path=args.X_train_path,
          X_test_path=args.X_test_path,
          output_dir=args.output_dir,

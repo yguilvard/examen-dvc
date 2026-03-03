@@ -1,0 +1,17 @@
+{
+  "model_name": "lightgbm",
+  "model_kwargs": {
+    "random_state": 42,
+    "objective": "regression",
+    "n_jobs": 4,
+    "verbosity": -1,
+    "force_col_wise": true
+  },
+  "param_grid": {
+    "n_estimators": [200, 400, 600],
+    "learning_rate": [0.01, 0.03, 0.07],
+    "num_leaves": [15, 31],
+    "max_depth": [8, 16],
+    "min_child_samples": [20]
+  }
+}

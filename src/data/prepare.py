@@ -49,34 +49,34 @@ def main(input_file: Path, output_dir: Path, test_size: float, seed: int):
 
 
 if __name__ == "__main__":
-    args = argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description="Prepare dataset for training and testing.")
-    args.add_argument(
+    parser.add_argument(
         "--input_path",
         type=Path,
         default=DATA_RAW_DIR / "raw.csv",
         help="Path to the raw dataset.",
     )
-    args.add_argument(
+    parser.add_argument(
         "--output_dir",
         type=Path,
         default=DATA_PROCESSED_DIR,
         help="Directory to save the processed dataset.",
     )
-    args.add_argument(
+    parser.add_argument(
         "--test_size",
         type=float,
         default=TEST_SIZE,
         help="Size of the test sample.",
     )
-    args.add_argument(
+    parser.add_argument(
         "--seed",
         type=int,
         default=RANDOM_STATE,
         help="Random seed for train/test split.",
     )
     # Parsing arguments
-    args = args.parse_args()
+    args = parser.parse_args()
 
     # Run the main process
     main(

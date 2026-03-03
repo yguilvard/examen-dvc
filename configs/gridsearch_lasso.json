@@ -1,0 +1,12 @@
+{
+  "model_name": "lasso",
+  "model_kwargs": {
+    "random_state": 42,
+    "max_iter": 20000
+  },
+  "param_grid": {
+    "alpha": [0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0],
+    "fit_intercept": [true, false],
+    "selection": ["cyclic", "random"]
+  }
+}
