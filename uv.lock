@@ -701,6 +701,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "dvc" },
+    { name = "joblib" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "scikit-learn" },
@@ -714,6 +715,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "dvc", extras = ["http"], specifier = ">=3.66.1" },
+    { name = "joblib", specifier = ">=1.5.3" },
     { name = "numpy", specifier = ">=2.4.2" },
     { name = "pandas", specifier = ">=3.0.1" },
     { name = "scikit-learn", specifier = ">=1.8.0" },

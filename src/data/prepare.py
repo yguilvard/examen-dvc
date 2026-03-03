@@ -23,6 +23,9 @@ def main(input_file: Path, output_dir: Path, test_size: float, seed: int):
     # Load dataset
     df = pd.read_csv(input_file.absolute())
 
+    # Suppress non relevant data
+    df = df.drop(columns=['date'])
+
     # Target column
     target_col = "silica_concentrate"
 
