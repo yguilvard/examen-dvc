@@ -4,4 +4,6 @@
 __pycache__
 metrics/
 data/processed
-
+models/*.pkl
+models/*.joblib
+data/predictions.csv
